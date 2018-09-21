@@ -1,23 +1,36 @@
+ifdef SYSTEMROOT
+  ifdef MSYSTEM
+    RM = rm -rf
+  else
+	RM = DEL /Q
+  endif
+  BINARY_NAME_EXTENSION = .exe
+else
+  RM = rm -rf
+endif
+
 GOCMD=go
-GOBUILD=$(GOCMD) build
-GOCLEAN=$(GOCMD) clean
-GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
-BUILD_FOLDER=build
-BINARY_WIN=Endraft.exe
-BINARY_NIX=Endraft
+SRC_FOLDER=./src
+BUILD_FOLDER=./build
+MAIN_PACKAGE=main
+
+BINARY_NAME=Endraft
+BINARY_PATH=$(BUILD_FOLDER)/$(BINARY_NAME)$(BINARY_NAME_EXTENSION)
 
 all: deps build test
 
-build:
-	$(GOBUILD) -o $(BINARY_NAME) -v
+build: 
+	$(GOCMD) build -o $(BINARY_PATH) -v $(SRC_FOLDER)/$(MAIN_PACKAGE)
+
+run: build
+	./$(BINARY_PATH)
 
 test:
-	$(GOTEST) -v ./..
+	$(GOCMD) test -v ./...
 
 deps:
-	$(GOGET) -u -v github.com/therecipe/qt/cmd/...
+	$(GOCMD) get -u -v github.com/therecipe/qt/cmd/...
 
 clean:
-	$(GOCLEAN)
-	rm -r $(BUILD_FOLDER)
+	$(GO) clean
+	$(RM) $(BUILD_FOLDER)
