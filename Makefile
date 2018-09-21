@@ -25,12 +25,12 @@ build:
 run: build
 	./$(BINARY_PATH)
 
-test:
+test: build
 	$(GOCMD) test -v ./...
 
 deps:
 	$(GOCMD) get -u -v github.com/therecipe/qt/cmd/...
 
 clean:
-	$(GO) clean
+	$(GOCMD) clean
 	$(RM) $(BUILD_FOLDER)
